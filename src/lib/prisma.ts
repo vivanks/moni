@@ -4,7 +4,12 @@ import pkg from "pg";
 const { Pool } = pkg;
 
 const prismaClientSingleton = () => {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new Pool({ 
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false // Required for Supabase in many serverless environments
+    }
+  });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 };
