@@ -9,7 +9,7 @@ import {
 import Modal from "./Modal";
 import { addTransaction, deleteTransaction, updateTransaction } from "../../lib/actions/transactions";
 import { createCategory, deleteCategory } from "../../lib/actions/categories";
-import { inviteFamilyMember } from "../../lib/actions/auth";
+import { inviteUser } from "../../lib/actions/auth";
 import { Trash2, UserPlus, Pencil } from "lucide-react";
 
 interface WalletData {
