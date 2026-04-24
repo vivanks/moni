@@ -20,8 +20,12 @@ export async function resetAllData() {
     await prisma.family.deleteMany();
 
     // 4. Create a default family to keep the app functional
+    const inviteCode = Math.random().toString(36).substring(2, 6).toUpperCase();
     const defaultFamily = await prisma.family.create({
-      data: { name: "Main Family" }
+      data: { 
+        name: "Main Family",
+        inviteCode: inviteCode
+      }
     });
 
     // 5. Delete all Categories
