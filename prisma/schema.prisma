@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String        @id @default(uuid())
+  email              String        @unique
+  name               String
+  password           String?
+  mustChangePassword Boolean       @default(false)
+  familyId           String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  transactions       Transaction[]
+  family             Family?       @relation(fields: [familyId], references: [id])
+  wallets            Wallet[]
+  categories         Category[]
+}
+
+model Family {
+  id         String     @id @default(uuid())
+  name       String
+  inviteCode String     @unique
+  createdAt  DateTime   @default(now())
+  members    User[]
+  wallets    Wallet[]
+  categories Category[]
+}
+
+model Wallet {
+  id           String        @id @default(uuid())
+  name         String
+  type         String
+  balance      Float         @default(0)
+  userId       String
+  familyId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+  family       Family?       @relation(fields: [familyId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  amount      Float
+  date        DateTime @default(now())
+  type        String
+  merchant    String
+  rawMerchant String?
+  category    String?
+  walletId    String
+  userId      String
+  notes       String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
+}
+
+model Category {
+  id       String  @id @default(uuid())
+  name     String
+  userId   String
+  familyId String?
+  budget   Float?
+  color    String  @default("bg-blue-500")
+  user     User    @relation(fields: [userId], references: [id])
+  family   Family? @relation(fields: [familyId], references: [id])
+
+  @@unique([name, userId])
+}
